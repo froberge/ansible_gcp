@@ -31,12 +31,13 @@
     - name: create a VPC network
       google.cloud.gcp_compute_network:
         name: network-instance
+        auto_create_subnetworks: no
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: present
       register: network
 
-    - name: create and IPv4 public IP Address
+    - name: create an public IP Address
       google.cloud.gcp_compute_address:
         name: address-instance
         region: "{{ region }}"
