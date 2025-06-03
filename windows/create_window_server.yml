@@ -4,7 +4,7 @@
   gather_facts: no
   
   vars:
-    project_id: rhpds-345620
+    project_id: openenv-9bkwf
     zone: us-central1-a
     instance_name: windows-server-test
     machine_type: e2-standard-2
@@ -35,10 +35,11 @@
           windows-startup-script-cmd: |
             net user /add ansible_user myPassword123!
             net localgroup administrators ansible_user /add
-        service_accounts:
-          - email: sa-openenv-9bkwf@rhpds-345620.iam.gserviceaccount.com
-            scopes:
-              - https://www.googleapis.com/auth/cloud-platform
+        auth_kind: "{{ cred_kind }}"
+        # service_accounts:
+        #   - email: sa-openenv-9bkwf@rhpds-345620.iam.gserviceaccount.com
+        #     scopes:
+        #       - https://www.googleapis.com/auth/cloud-platform
         tags:
           - windows-server
       register: instance
