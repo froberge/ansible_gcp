@@ -6,9 +6,11 @@
   vars:
     project_id: openenv-9bkwf
     cred_kind: serviceaccount
+    instance_name: windows-server-test
+    firewall_rule_name: allow-tcp-traffic
     zone: us-central1-a
     region: us-central1
-    firewall_rule_name: allow-tcp-traffic
+    
 
 
 
