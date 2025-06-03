@@ -1,0 +1,11 @@
+---
+- name: Run Windows Update on remote Windows server
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Install all available updates
+      ansible.windows.win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+        reboot: yes

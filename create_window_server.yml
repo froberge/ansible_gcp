@@ -92,6 +92,9 @@
                 type: ONE_TO_ONE_NAT
         metadata:
           windows-startup-script-cmd: |
+            winrm quickconfig -q
+            winrm set winrm/config/service/auth @{Basic="true"}
+            winrm set winrm/config/service @{AllowUnencrypted="true"}
             net user /add ansible_user myPassword123!
             net localgroup administrators ansible_user /add
         tags:
