@@ -66,7 +66,7 @@
           network: "{{ network }}"
           allowed:
             - ip_protocol: tcp
-              ports: ["3389","5985"]
+              ports: ["3389"]
           source_ranges: "{{ source_ranges }}"
           target_tags: "{{ target_tags }}"
           direction: INGRESS
