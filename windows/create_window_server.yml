@@ -2,11 +2,9 @@
 - name: Create Windows Server in GCP
   hosts: localhost
   gather_facts: no
-  collections:
-    - google.cloud
-
+  
   vars:
-    project_id: your-gcp-project-id
+    project_id: rhpds-345620
     zone: us-central1-a
     instance_name: windows-server-test
     machine_type: e2-standard-2
