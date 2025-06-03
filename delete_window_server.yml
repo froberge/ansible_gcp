@@ -38,18 +38,20 @@
         auth_kind: "{{ cred_kind }}"
         state: absent
 
-    - name: delete subnet
-      google.cloud.gcp_compute_subnetwork:
-        name: windows-subnet-instance
-        region: "{{ region }}"
-        ip_cidr_range: "172.16.0.0/16"
-        project: "{{ project_id }}"
-        auth_kind: "{{ cred_kind }}"
-        state: absent
-
     - name: delete VPC network
       google.cloud.gcp_compute_network:
         name: windows-network-instance
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: absent
+      register: network
+
+    - name: delete subnet
+      google.cloud.gcp_compute_subnetwork:
+        name: windows-subnet-instance
+        network: "{{ network }}"
+        region: "{{ region }}"
+        ip_cidr_range: "172.16.0.0/16"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
