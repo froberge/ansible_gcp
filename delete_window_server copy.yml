@@ -20,60 +20,6 @@
 
 
   tasks:
-    - name: create a disk mapped from windows-2022
-      google.cloud.gcp_compute_disk:
-        name: windows-disk-instance
-        size_gb: "{{ disk_size_gb }}"
-        source_image: "projects/{{ source_image_project }}/global/images/family/{{ source_image_family }}"
-        zone: "{{ zone }}"
-        project: "{{ project_id }}"
-        auth_kind: "{{ cred_kind }}"
-        state: absent
-      register: disk
-
-    - name: create a VPC network
-      google.cloud.gcp_compute_network:
-        name: windows-network-instance
-        auto_create_subnetworks: 'true'
-        project: "{{ project_id }}"
-        auth_kind: "{{ cred_kind }}"
-        state: absent
-      register: network
-
-    - name: create a subnet
-      google.cloud.gcp_compute_subnetwork:
-        name: windows-subnet-instance
-        region: "{{ region }}"
-        network: "{{ network }}"
-        ip_cidr_range: "172.16.0.0/16"
-        project: "{{ project_id }}"
-        auth_kind: "{{ cred_kind }}"
-        state: absent
-      register: subnet
-
-    - name: create an public IP Address
-      google.cloud.gcp_compute_address:
-        name: windows-address-instance
-        region: "{{ region }}"
-        project: "{{ project_id }}"
-        auth_kind: "{{ cred_kind }}"
-        state: absent
-      register: address
-
-    - name: Create firewall rule to allow RDP
-      google.cloud.gcp_compute_firewall:
-        name: "{{ firewall_rule_name }}"
-        network: "{{ network }}"
-        allowed:
-          - ip_protocol: tcp
-            ports: ["3389"]
-        source_ranges: "{{ source_ranges }}"
-        target_tags: "{{ target_tags }}"
-        direction: INGRESS
-        project: "{{ project_id }}"
-        state: absent
-      register: firewall
-
     - name: Create a Windows Server VM instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
@@ -104,6 +50,45 @@
         state: absent
       register: instance
 
-    - name: Print instance public IP
-      ansible.builtin.debug:
-        msg: "The RHEL instance is accessible at {{ address.address }}"
+    - name: Create firewall rule to allow RDP
+      google.cloud.gcp_compute_firewall:
+        name: "{{ firewall_rule_name }}"
+        network: "{{ network }}"
+        allowed:
+          - ip_protocol: tcp
+            ports: ["3389"]
+        source_ranges: "{{ source_ranges }}"
+        target_tags: "{{ target_tags }}"
+        direction: INGRESS
+        project: "{{ project_id }}"
+        state: absent
+      register: firewall
+
+    - name: create an public IP Address
+      google.cloud.gcp_compute_address:
+        name: windows-address-instance
+        region: "{{ region }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: absent
+      register: address
+
+    - name: create a subnet
+      google.cloud.gcp_compute_subnetwork:
+        name: windows-subnet-instance
+        region: "{{ region }}"
+        network: "{{ network }}"
+        ip_cidr_range: "172.16.0.0/16"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: absent
+      register: subnet
+
+    - name: create a VPC network
+      google.cloud.gcp_compute_network:
+        name: windows-network-instance
+        auto_create_subnetworks: 'true'
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: absent
+      register: network
