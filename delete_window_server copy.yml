@@ -10,8 +10,6 @@
     firewall_rule_name: allow-tcp-traffic
     zone: us-central1-a
     region: us-central1
-    
-
 
 
   tasks:
