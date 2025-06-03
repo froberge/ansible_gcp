@@ -41,6 +41,7 @@
     - name: delete subnet
       google.cloud.gcp_compute_subnetwork:
         name: windows-subnet-instance
+        region: "{{ region }}"
         ip_cidr_range: "172.16.0.0/16"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
