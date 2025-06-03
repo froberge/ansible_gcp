@@ -22,8 +22,8 @@
         size_gb: 50
         source_image: projects/rhel-cloud/global/image/rhel-8-v20190905
         zone: us-central1-a
-        project: "{{ gcp_project }}"
-        auth_kind: "{{ gcp_cred_kind }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
         state: present
       register: disk
 
