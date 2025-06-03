@@ -1,0 +1,70 @@
+---
+- name: Create a GCP instance
+  hosts: localhost
+  gather_facts: no
+  
+  vars:
+    project_id: openenv-9bkwf
+    cred_kind: serviceaccount
+    zone: us-central1-a
+    disk_size_gb: 50
+    region: us-central1
+    instance_name: rhel8
+    machine_type: e2-standard-2
+    # source_image_family: windows-2022
+    # source_image_project: windows-cloud
+
+    # network: default
+
+  tasks:
+    - name: create a disk mapped from RHEL8 image
+      google.cloud.gcp_compute_disk:
+        name: rhel8-disk-instance
+        size_gb: "{{ disk_size_gb }}"
+        source_image: projects/rhel-cloud/global/images/rhel-8-v20190905
+        zone: "{{ zone }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: disk
+
+    - name: create a VPC network
+      google.cloud.gcp_compute_network:
+        name: network-instance
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: network
+
+    - name: create and IPv4 public IP Address
+      google.cloud.gcp_compute_address:
+        name: address-instance
+        region: "{{ region }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: address
+
+    - name: create the RHEL8 instance
+      google.cloud.gcp_compute_instance:
+        name: "{{ instance_name }}"
+        machine_type: "{{ machine_type }}"
+        disks:
+        - auto_delete: 'true'
+          boot: 'true'
+          source: "{{ disk }}"
+        network_interfaces:
+        - network: "{{ network }}"
+          access_configs:
+          - name: External NAT
+            nat_ip: "{{ address }}"
+            type: ONE_TO_ONE_NAT
+        zone: "{{ zone }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+
+          
+          
+
+
