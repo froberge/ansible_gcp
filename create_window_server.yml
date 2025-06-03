@@ -12,7 +12,7 @@
     machine_type: e2-standard-2
     source_image_family: windows-2022
     source_image_project: windows-cloud
-    firewall_rule_name: allow-rdp
+    firewall_rule_name: allow-tcp-traffic
     disk_size_gb: 50
     source_ranges: ["0.0.0.0/0"]  
     target_tags: ["windows-server"]
@@ -94,9 +94,6 @@
                 type: ONE_TO_ONE_NAT
         metadata:
           windows-startup-script-cmd: |
-            winrm quickconfig -q
-            winrm set winrm/config/service/auth @{Basic="true"}
-            winrm set winrm/config/service @{AllowUnencrypted="true"}
             net user ansible_user MySecurePass123! /add
             net localgroup administrators ansible_user /add
         tags:
