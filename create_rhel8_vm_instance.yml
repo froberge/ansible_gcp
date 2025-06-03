@@ -58,6 +58,23 @@
         state: present
       register: address
 
+    - name: create firewall
+      google.cloud.gcp_compute_firewall:
+        name: firewall-instance
+        network: "{{ network }}"
+        allowed:
+        - ip_protocol: tcp
+          ports: ['22']
+        source_ranges: [ '0.0.0.0/0' ]
+        target_tags:
+        - rhel-ssh
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: firewall
+
+
+
     - name: create the RHEL8 instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
@@ -73,6 +90,8 @@
           - name: External NAT
             nat_ip: "{{ address }}"
             type: ONE_TO_ONE_NAT
+        tags:
+          items: rhel-ssh
         zone: "{{ zone }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
