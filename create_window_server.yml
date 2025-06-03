@@ -65,7 +65,7 @@
           name: "{{ firewall_rule_name }}"
           network: "{{ network }}"
           allowed:
-            - IPProtocol: tcp
+            - ip_protocol: tcp
               ports: ["3389"]
           source_ranges: "{{ source_ranges }}"
           target_tags: "{{ target_tags }}"
