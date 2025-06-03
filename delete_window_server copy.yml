@@ -28,7 +28,7 @@
         zone: "{{ zone }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
-        state: present
+        state: absent
       register: disk
 
     - name: create a VPC network
@@ -37,7 +37,7 @@
         auto_create_subnetworks: 'true'
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
-        state: present
+        state: absent
       register: network
 
     - name: create a subnet
@@ -48,7 +48,7 @@
         ip_cidr_range: "172.16.0.0/16"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
-        state: present
+        state: absent
       register: subnet
 
     - name: create an public IP Address
@@ -57,7 +57,7 @@
         region: "{{ region }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
-        state: present
+        state: absent
       register: address
 
     - name: Create firewall rule to allow RDP
@@ -71,8 +71,8 @@
           target_tags: "{{ target_tags }}"
           direction: INGRESS
           project: "{{ project_id }}"
-        state: present
-      register: firewall
+          state: absent
+        register: firewall
 
     - name: Create a Windows Server VM instance
       google.cloud.gcp_compute_instance:
@@ -101,6 +101,7 @@
             net localgroup administrators ansible_user /add
         tags:
           items: windows-server
+        state: absent
       register: instance
 
     - name: Print instance public IP
