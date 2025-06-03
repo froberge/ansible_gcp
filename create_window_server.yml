@@ -95,7 +95,7 @@
             winrm quickconfig -q
             winrm set winrm/config/service/auth @{Basic="true"}
             winrm set winrm/config/service @{AllowUnencrypted="true"}
-            net user /add ansible_user myPassword123!
+            net user ansible_user MySecurePass123! /add
             net localgroup administrators ansible_user /add
         tags:
           items: windows-server
