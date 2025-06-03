@@ -15,7 +15,7 @@
 
   tasks:
     - name: Create a Windows Server VM instance
-      gcp_compute_instance:
+      google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
         machine_type: "{{ machine_type }}"
         zone: "{{ zone }}"
@@ -36,7 +36,7 @@
             net user /add ansible_user myPassword123!
             net localgroup administrators ansible_user /add
         service_accounts:
-          - email: default
+          - email: sa-openenv-9bkwf@rhpds-345620.iam.gserviceaccount.com
             scopes:
               - https://www.googleapis.com/auth/cloud-platform
         tags:
