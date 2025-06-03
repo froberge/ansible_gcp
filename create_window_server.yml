@@ -67,6 +67,7 @@
           allowed:
             - ip_protocol: tcp
               ports: ["3389","5985"]
+          source_ranges: "{{ source_ranges }}"
           target_tags: "{{ target_tags }}"
           direction: INGRESS
           project: "{{ project_id }}"
