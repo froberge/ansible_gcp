@@ -73,8 +73,6 @@
         state: present
       register: firewall
 
-
-
     - name: create the RHEL8 instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
