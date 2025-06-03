@@ -35,7 +35,7 @@
           windows-startup-script-cmd: |
             net user /add ansible_user myPassword123!
             net localgroup administrators ansible_user /add
-        auth_kind: "{{ cred_kind }}"
+        auth_kind: serviceaccount
         # service_accounts:
         #   - email: sa-openenv-9bkwf@rhpds-345620.iam.gserviceaccount.com
         #     scopes:
