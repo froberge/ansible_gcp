@@ -104,5 +104,5 @@
       register: instance
 
     - name: Print instance public IP
-      debug:
-        var: instance.data.networkInterfaces[0].accessConfigs[0].natIP
+      ansible.builtin.debug:
+        msg: "The RHEL instance is accessible at {{ address.address }}"
