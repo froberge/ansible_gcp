@@ -64,6 +64,10 @@
         auth_kind: "{{ cred_kind }}"
         state: present
 
+    - name: Print instance public IP
+      ansible.builtin.debug:
+        msg: "The RHEL instance is accessible at {{ address.address }}"
+
           
           
 
