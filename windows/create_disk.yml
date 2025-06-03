@@ -20,7 +20,7 @@
       google.cloud.gcp_compute_disk:
         name: disk-instance
         size_gb: 50
-        source_image: projects/rhel-cloud/global/image/rhel-8-v20190905
+        source_image: projects/rhel-cloud/global/images/rhel-8-v20190905
         zone: us-central1-a
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
