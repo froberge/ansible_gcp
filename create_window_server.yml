@@ -7,6 +7,7 @@
     project_id: openenv-9bkwf
     cred_kind: serviceaccount
     zone: us-central1-a
+    region: us-central1
     instance_name: windows-server-test
     machine_type: e2-standard-2
     source_image_family: windows-2022
@@ -26,38 +27,61 @@
         state: present
       register: disk
 
+    - name: create a VPC network
+      google.cloud.gcp_compute_network:
+        name: windows-network-instance
+        auto_create_subnetworks: 'true'
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: network
 
+    - name: create a subnet
+      google.cloud.gcp_compute_subnetwork:
+        name: windows-subnet-instance
+        region: "{{ region }}"
+        network: "{{ network }}"
+        ip_cidr_range: "172.16.0.0/16"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: subnet
 
-    # - name: Create a Windows Server VM instance
-    #   google.cloud.gcp_compute_instance:
-    #     name: "{{ instance_name }}"
-    #     machine_type: "{{ machine_type }}"
-    #     zone: "{{ zone }}"
-    #     project: "{{ project_id }}"
-    #     disks:
-    #       - auto_delete: true
-    #         boot: true
-    #         initialize_params:
-    #           source_image: "projects/{{ source_image_project }}/global/images/family/{{ source_image_family }}"
-    #           disk_size_gb: "{{ disk_size_gb }}"
-    #     network_interfaces:
-    #       - network: "global/networks/{{ network }}"
-    #         access_configs:
-    #           - name: External NAT
-    #             type: ONE_TO_ONE_NAT
-    #     metadata:
-    #       windows-startup-script-cmd: |
-    #         net user /add ansible_user myPassword123!
-    #         net localgroup administrators ansible_user /add
-    #     auth_kind: serviceaccount
-    #     # service_accounts:
-    #     #   - email: sa-openenv-9bkwf@rhpds-345620.iam.gserviceaccount.com
-    #     #     scopes:
-    #     #       - https://www.googleapis.com/auth/cloud-platform
-    #     tags:
-    #       - windows-server
-    #   register: instance
+    - name: create an public IP Address
+      google.cloud.gcp_compute_address:
+        name: windows-address-instance
+        region: "{{ region }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        state: present
+      register: address
 
-    # - name: Print instance public IP
-    #   debug:
-    #     var: instance.data.networkInterfaces[0].accessConfigs[0].natIP
+    - name: Create a Windows Server VM instance
+      google.cloud.gcp_compute_instance:
+        name: "{{ instance_name }}"
+        machine_type: "{{ machine_type }}"
+        zone: "{{ zone }}"
+        project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
+        disks:
+          - auto_delete: true
+            boot: true
+            source: "{{ disk }}"
+        network_interfaces:
+          - network: "{{ network }}"
+            subnetwork: "{{ subnet }}"
+            access_configs:
+              - name: External NAT
+                nat_ip: "{{ address }}"
+                type: ONE_TO_ONE_NAT
+        metadata:
+          windows-startup-script-cmd: |
+            net user /add ansible_user myPassword123!
+            net localgroup administrators ansible_user /add
+        tags:
+          items: windows-server
+      register: instance
+
+    - name: Print instance public IP
+      debug:
+        var: instance.data.networkInterfaces[0].accessConfigs[0].natIP

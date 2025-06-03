@@ -11,10 +11,6 @@
     region: us-central1
     instance_name: rhel8
     machine_type: e2-standard-2
-    # source_image_family: windows-2022
-    # source_image_project: windows-cloud
-
-    # network: default
 
   tasks:
     - name: create a disk mapped from RHEL8 image
