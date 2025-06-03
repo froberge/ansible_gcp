@@ -6,16 +6,8 @@
   vars:
     project_id: openenv-9bkwf
     cred_kind: serviceaccount
-    zone: us-central1-a
-    region: us-central1
     instance_name: windows-server-test
-    machine_type: e2-standard-2
-    source_image_family: windows-2022
-    source_image_project: windows-cloud
     firewall_rule_name: allow-rdp
-    disk_size_gb: 50
-    source_ranges: ["0.0.0.0/0"]  
-    target_tags: ["windows-server"]
 
 
 
@@ -23,72 +15,34 @@
     - name: Create a Windows Server VM instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
-        machine_type: "{{ machine_type }}"
-        zone: "{{ zone }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
-        disks:
-          - auto_delete: true
-            boot: true
-            source: "{{ disk }}"
-        network_interfaces:
-          - network: "{{ network }}"
-            subnetwork: "{{ subnet }}"
-            access_configs:
-              - name: External NAT
-                nat_ip: "{{ address }}"
-                type: ONE_TO_ONE_NAT
-        metadata:
-          windows-startup-script-cmd: |
-            winrm quickconfig -q
-            winrm set winrm/config/service/auth @{Basic="true"}
-            winrm set winrm/config/service @{AllowUnencrypted="true"}
-            net user ansible_user MySecurePass123! /add
-            net localgroup administrators ansible_user /add
-        tags:
-          items: windows-server
         state: absent
-      register: instance
 
     - name: Create firewall rule to allow RDP
       google.cloud.gcp_compute_firewall:
         name: "{{ firewall_rule_name }}"
-        network: "{{ network }}"
-        allowed:
-          - ip_protocol: tcp
-            ports: ["3389"]
-        source_ranges: "{{ source_ranges }}"
-        target_tags: "{{ target_tags }}"
-        direction: INGRESS
         project: "{{ project_id }}"
+        auth_kind: "{{ cred_kind }}"
         state: absent
-      register: firewall
 
     - name: create an public IP Address
       google.cloud.gcp_compute_address:
         name: windows-address-instance
-        region: "{{ region }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
-      register: address
 
     - name: create a subnet
       google.cloud.gcp_compute_subnetwork:
         name: windows-subnet-instance
-        region: "{{ region }}"
-        network: "{{ network }}"
-        ip_cidr_range: "172.16.0.0/16"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
-      register: subnet
 
     - name: create a VPC network
       google.cloud.gcp_compute_network:
         name: windows-network-instance
-        auto_create_subnetworks: 'true'
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
-      register: network
