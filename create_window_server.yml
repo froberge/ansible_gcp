@@ -62,15 +62,15 @@
 
     - name: Create firewall rule to allow RDP
       google.cloud.gcp_compute_firewall:
-          name: "{{ firewall_rule_name }}"
-          network: "{{ network }}"
-          allowed:
-            - ip_protocol: tcp
-              ports: ["3389"]
-          source_ranges: "{{ source_ranges }}"
-          target_tags: "{{ target_tags }}"
-          direction: INGRESS
-          project: "{{ project_id }}"
+        name: "{{ firewall_rule_name }}"
+        network: "{{ network }}"
+        allowed:
+          - ip_protocol: tcp
+            ports: ["3389"]
+        source_ranges: "{{ source_ranges }}"
+        target_tags: "{{ target_tags }}"
+        direction: INGRESS
+        project: "{{ project_id }}"
         state: present
       register: firewall
 
