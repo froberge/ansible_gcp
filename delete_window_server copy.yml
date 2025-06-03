@@ -6,8 +6,16 @@
   vars:
     project_id: openenv-9bkwf
     cred_kind: serviceaccount
+    zone: us-central1-a
+    region: us-central1
     instance_name: windows-server-test
+    machine_type: e2-standard-2
+    source_image_family: windows-2022
+    source_image_project: windows-cloud
     firewall_rule_name: allow-rdp
+    disk_size_gb: 50
+    source_ranges: ["0.0.0.0/0"]  
+    target_tags: ["windows-server"]
 
 
 
@@ -15,8 +23,11 @@
     - name: Create a Windows Server VM instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
+        zone: "{{ zone }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
+        tags:
+          items: windows-server
         state: absent
 
     - name: Create firewall rule to allow RDP
