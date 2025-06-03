@@ -4,7 +4,7 @@
   gather_facts: no
   
   vars:
-    project_id: rhpds-345620
+    project_id: openenv-9bkwf
     cred_kind: serviceaccount
 
     # zone: us-central1-a
