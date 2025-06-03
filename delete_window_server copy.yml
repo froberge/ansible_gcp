@@ -8,19 +8,12 @@
     cred_kind: serviceaccount
     zone: us-central1-a
     region: us-central1
-    instance_name: windows-server-test
-    machine_type: e2-standard-2
-    source_image_family: windows-2022
-    source_image_project: windows-cloud
-    firewall_rule_name: allow-rdp
-    disk_size_gb: 50
-    source_ranges: ["0.0.0.0/0"]  
-    target_tags: ["windows-server"]
+    firewall_rule_name: allow-tcp-traffic
 
 
 
   tasks:
-    - name: Create a Windows Server VM instance
+    - name: delete  Windows Server VM instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
         zone: "{{ zone }}"
@@ -30,28 +23,29 @@
           items: windows-server
         state: absent
 
-    - name: Create firewall rule to allow RDP
+    - name: delete firewall rule
       google.cloud.gcp_compute_firewall:
         name: "{{ firewall_rule_name }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
 
-    - name: create an public IP Address
+    - name: deletepublic IP Address
       google.cloud.gcp_compute_address:
         name: windows-address-instance
+        region: "{{ region }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
 
-    - name: create a subnet
+    - name: delete subnet
       google.cloud.gcp_compute_subnetwork:
         name: windows-subnet-instance
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: absent
 
-    - name: create a VPC network
+    - name: delete VPC network
       google.cloud.gcp_compute_network:
         name: windows-network-instance
         project: "{{ project_id }}"
