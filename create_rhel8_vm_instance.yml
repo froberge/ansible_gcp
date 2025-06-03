@@ -31,7 +31,7 @@
     - name: create a VPC network
       google.cloud.gcp_compute_network:
         name: network-instance
-        auto_create_subnetworks: no
+        auto_create_subnetworks: 'true'
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
         state: present
