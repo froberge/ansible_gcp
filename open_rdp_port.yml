@@ -14,7 +14,7 @@
     - name: Create firewall rule to allow RDP
       google.cloud.gcp_compute_firewall:
         name: allow-rdp
-        network: "global/networks/{{ network-instance }}"
+        network: "global/networks/{{ instance-name }}-network"
         allowed:
           - ip_protocol: tcp
             ports: ["3389"]
