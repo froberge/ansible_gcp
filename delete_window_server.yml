@@ -32,7 +32,7 @@
 
     - name: delete public IP Address
       google.cloud.gcp_compute_address:
-        name: windows-address-instance
+        name: "{{ instance_name }}-address"
         region: "{{ region }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
