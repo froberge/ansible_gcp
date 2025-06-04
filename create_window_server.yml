@@ -59,7 +59,7 @@
 
     - name: Create firewall rule to allow RDP
       google.cloud.gcp_compute_firewall:
-        name: allow-tcp-traffic
+        name: allow-rdp
         network: "{{ network }}"
         allowed:
           - ip_protocol: tcp
