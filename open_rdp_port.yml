@@ -7,8 +7,8 @@
     # Template variable dynamic
     # project_id: openenv-9bkwf
     # network-instance: 
-    source_ranges: ["0.0.0.0/0"]  # ⚠️ Open to all — consider restricting this!
-    target_tags: ["windows-server"]  # Match the tag used in the VM playbook
+    source_ranges: ["0.0.0.0/0"]  
+    target_tags: ["windows-server"]
 
   tasks:
     - name: Create firewall rule to allow RDP
