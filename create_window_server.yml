@@ -57,18 +57,6 @@
         state: present
       register: address
 
-    # - name: Create firewall rule to allow RDP
-    #   google.cloud.gcp_compute_firewall:
-    #     name: allow-rdp
-    #     network: "{{ network }}"
-    #     allowed:
-    #       - ip_protocol: tcp
-    #         ports: ["3389"]
-    #     source_ranges: ["0.0.0.0/0"]
-    #     target_tags: ["windows-server"]
-    #     direction: INGRESS
-    #     project: "{{ project_id }}"
-
     - name: Create a Windows Server VM instance
       google.cloud.gcp_compute_instance:
         name: "{{ instance_name }}"
@@ -89,7 +77,7 @@
                 type: ONE_TO_ONE_NAT
         metadata:
           windows-startup-script-cmd: |
-            net user /add ansible_user MySecurePass123!
+            net user /add ansible_user ansible123!!
             net localgroup administrators ansible_user /add
         tags:
           items: windows-server
