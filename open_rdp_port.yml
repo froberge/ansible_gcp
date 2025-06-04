@@ -1,5 +1,5 @@
 ---
-- name: Create Windows Server in GCP
+- name: Open RDP port on network
   hosts: localhost
   gather_facts: no
   
@@ -14,7 +14,7 @@
     - name: Create firewall rule to allow RDP
       google.cloud.gcp_compute_firewall:
         name: allow-rdp
-        network: "global/networks/{{ instance-name }}-network"
+        network: "global/networks/{{ instance_name }}-network"
         allowed:
           - ip_protocol: tcp
             ports: ["3389"]
