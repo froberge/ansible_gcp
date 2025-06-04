@@ -4,26 +4,23 @@
   gather_facts: no
   
   vars:
-    project_id: openenv-9bkwf
     cred_kind: serviceaccount
-    zone: us-central1-a
-    region: us-central1
-    instance_name: windows-server-test
     machine_type: e2-standard-2
     source_image_family: windows-2022
     source_image_project: windows-cloud
-    firewall_rule_name: allow-tcp-traffic
-    disk_size_gb: 50
-    source_ranges: ["0.0.0.0/0"]  
-    target_tags: ["windows-server"]
-
+  
+    # Template variable dynamic
+    # project_id: openenv-9bkwf
+    # zone: us-central1-a
+    # region: us-central1
+    # instance_name: windows-server-test
 
 
   tasks:
     - name: create a disk mapped from windows-2022
       google.cloud.gcp_compute_disk:
         name: windows-disk-instance
-        size_gb: "{{ disk_size_gb }}"
+        size_gb: "50"
         source_image: "projects/{{ source_image_project }}/global/images/family/{{ source_image_family }}"
         zone: "{{ zone }}"
         project: "{{ project_id }}"
@@ -33,7 +30,7 @@
 
     - name: create a VPC network
       google.cloud.gcp_compute_network:
-        name: windows-network-instance
+        name: "{{ instance_name }}-network"
         auto_create_subnetworks: 'true'
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
@@ -42,7 +39,7 @@
 
     - name: create a subnet
       google.cloud.gcp_compute_subnetwork:
-        name: windows-subnet-instance
+        name: "{{ instance_name }}-subnet"
         region: "{{ region }}"
         network: "{{ network }}"
         ip_cidr_range: "172.16.0.0/16"
@@ -53,7 +50,7 @@
 
     - name: create an public IP Address
       google.cloud.gcp_compute_address:
-        name: windows-address-instance
+        name: "{{ instance_name }}-address"
         region: "{{ region }}"
         project: "{{ project_id }}"
         auth_kind: "{{ cred_kind }}"
@@ -62,13 +59,13 @@
 
     - name: Create firewall rule to allow RDP
       google.cloud.gcp_compute_firewall:
-        name: "{{ firewall_rule_name }}"
+        name: allow-tcp-traffic
         network: "{{ network }}"
         allowed:
           - ip_protocol: tcp
             ports: ["3389"]
-        source_ranges: "{{ source_ranges }}"
-        target_tags: "{{ target_tags }}"
+        source_ranges: ["0.0.0.0/0"]
+        target_tags: ["windows-server"]
         direction: INGRESS
         project: "{{ project_id }}"
         state: present
