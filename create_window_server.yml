@@ -99,4 +99,4 @@
 
     - name: Print instance public IP
       ansible.builtin.debug:
-        msg: "The RHEL instance is accessible at {{ address.address }}"
+        msg: "The window server ip is: {{ address.address }}"
