@@ -7,10 +7,10 @@
     cred_kind: serviceaccount
 
     # Template variable dynamic
-    # project_id: openenv-9bkwf
+    # project_id: 
     # zone: us-central1-a
     # region: us-central1
-    # instance_name: windows-server-test
+    # instance_name:
 
   tasks:
     - name: delete  Windows Server VM instance
